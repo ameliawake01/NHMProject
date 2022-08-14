@@ -1,0 +1,9 @@
+*~
+*.tmp
+__pycache__/
+/home/amelia-wake/Documents/CMEECoursework/Week3/MyRCourseWork/code/.RData
+.Rhistory
+/Week3/results
+!/Week3/results/.gitkeep
+.ipynb_checkpoints/
+

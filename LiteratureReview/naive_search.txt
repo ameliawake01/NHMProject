@@ -1,0 +1,11 @@
+( (occup* OR occur* OR presen* OR abundan* OR divers* OR coloniz* OR colonis* OR "population") OR
+("corn" OR "maize" OR "soy" OR "barley" OR "cereal") OR
+("zea mays" OR "glycine max" OR "hordeum vulgare") )
+  
+AND (agricult* OR farm* OR "cropland" OR "cultivation")
+
+AND (microb* OR microorganis* OR bacter* OR eukaryot*)
+
+AND ("conventional" OR "organic" OR "conservation")
+
+AND ("europe")
