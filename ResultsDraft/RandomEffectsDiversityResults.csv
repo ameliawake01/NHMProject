@@ -1,0 +1,13 @@
+Treatment,Group,ResponseRatio
+NonConventional,TotalCommunity,0.0407
+NonConventional,Prokaryotes,0.0387
+NonConventional,Eukaryotes,0.0067
+Intermediate,TotalCommunity,-0.0091
+Intermediate,Prokaryotes,-0.0092
+Intermediate,Eukaryotes,0.0007
+Organic,TotalCommunity,0.0429
+Organic,Prokaryotes,0.0406
+Organic,Eukaryotes,0.0001
+Conservation,TotalCommunity,0.0409
+Conservation,Prokaryotes,0
+Conservation,Eukaryotes,0
