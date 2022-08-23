@@ -32,12 +32,12 @@ calc.pairs <- function(data) {
 calc.effect <- function(siteone, sitetwo) {
   
   if (siteone$Management == "Conventional" && sitetwo$Management == "Organic"){
-    n1i <- siteone$n1i
-    m1i <- siteone$Abundance
-    sd1i <- siteone$Variance
-    n2i <- sitetwo$n1i
-    m2i <- sitetwo$Abundance
-    sd2i <- sitetwo$Variance
+    n2i <- siteone$n1i
+    m2i <- siteone$Abundance
+    sd2i <- siteone$Variance
+    n1i <- sitetwo$n1i
+    m1i <- sitetwo$Abundance
+    sd1i <- sitetwo$Variance
     # print("Condition met.")
     
     #Calculating effect sizes with assigned variables
@@ -83,6 +83,9 @@ for (x in unique(data$ID)){
   pairs$LRR_var <- 0
   pairs$ID <- x
   pairs$SoilType[x] <- df$Soil.Type
+  pairs$Length.of.Experiment[x] <- df$Length.of.Experiment
+  pairs$Climate[x] <- df$Climate
+  pairs$Crop.Type[x] <- df$Crop
   #pairs$SoilDepth[x] <- df$Soil.Level
   
   for (i in 1:nrow(pairs)) {

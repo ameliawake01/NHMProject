@@ -85,6 +85,7 @@ for (x in unique(data$ID)){
   #pairs$SoilType[x] <- df$Soil.Type
   #pairs$Length.of.Experiment <- df$Length.of.Experiment
   #pairs$Crop.Type <- df$Crop
+  #pairs$Climate <- df$Climate
   #pairs$SoilDepth[x] <- df$Soil.Level
   
   for (i in 1:nrow(pairs)) {

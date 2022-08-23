@@ -85,6 +85,7 @@ for (x in unique(data$ID)){
   pairs$SoilType[x] <- df$Soil.Type
   pairs$Length.of.Experiment[x] <- df$Length.of.Experiment
   pairs$Crop.Type[x] <- df$Crop
+  pairs$Climate[x] <- df$Climate
   #pairs$SoilDepth[x] <- df$Soil.Level
   
   for (i in 1:nrow(pairs)) {
@@ -152,10 +153,10 @@ forest(estimates, variances, slab="Pooled effect")
 #forest(community.model2, addpred = TRUE, header = TRUE)
 
 #Checking the significance of my moderators and random effects to obtain a better fitting model
-explanatories.2 <- lmerTest::lmer(data = pairs_final, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
-optimum_model <- get_model(step(explanatories.2))
-optimum_model_formula <- optimum_model$call
-optimum_model_formula
+#explanatories.2 <- lmerTest::lmer(data = pairs_final, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
+#optimum_model <- get_model(step(explanatories.2))
+#optimum_model_formula <- optimum_model$call
+#optimum_model_formula
 
 #Running optimum model as defined by step()
 community.model3 <- rma.mv(yi=pairs_final$LRR,
@@ -206,15 +207,16 @@ forest(estimates, variances, slab="Pooled effect")
 #forest(prokaryotes.model2, addpred = TRUE, header = TRUE)
 
 #Checking the significance of my moderators and random effects to obtain a better fitting model
-explanatories.2 <- lmerTest::lmer(data = prokaryotes_subset, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
-optimum_model <- get_model(step(explanatories.2))
-optimum_model_formula <- optimum_model$call
-optimum_model_formula
+#explanatories.2 <- lmerTest::lmer(data = prokaryotes_subset, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
+#optimum_model <- get_model(step(explanatories.2))
+#optimum_model_formula <- optimum_model$call
+#optimum_model_formula
 
 #Running optimum model as defined by step()
 prokaryote.model3 <- rma.mv(yi=prokaryotes_subset$LRR,
                             V=prokaryotes_subset$LRR_var,
-                            mods = ~ SoilType + Crop.Type,
+                            random = list(~ 1 | ID, ~ 1 | Length.of.Experiment),
+                            mods = ~ SoilType + Crop.Type + Climate,
                             slab=ID,
                             data=prokaryotes_subset)
 summary(prokaryote.model3)

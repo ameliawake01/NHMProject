@@ -3,7 +3,6 @@
 ########################################################################################################
 
 #Loading required packages and importing data
-library(tidyverse) # for data manipulation and quick data reading and writing
 library(metafor)
 library(dplyr)
 library(esc)
@@ -87,6 +86,7 @@ for (x in unique(data$ID)){
   pairs$SoilType[x] <- df$Soil.Type
   pairs$Length.of.Experiment[x] <- df$Length.of.Experiment
   pairs$Crop.Type[x] <- df$Crop
+  pairs$Climate[x] <- df$Climate
   #pairs$SoilDepth[x] <- df$Soil.Level
   
   for (i in 1:nrow(pairs)) {
@@ -140,7 +140,7 @@ variances <- c(vcov(community.model))
 
 #Making a forest plot containing estimates and variances for the community model
 forest(estimates, variances, 
-       slab="Pooled Random Effect \nof Total Community in \nNon-Conventional \nSystems")
+       slab="Pooled response ratio of \ntotal soil microbial \ncommunities in \nnon-conventional systems \nto conventional systems")
 
 #Running the model again with moderators
 #community.model2 <- rma.mv(yi=pairs_final$LRR,
@@ -152,27 +152,28 @@ forest(estimates, variances,
 #summary(community.model2)
 
 #Forest plot of model with moderators
-forest(community.model2, addpred = TRUE, header = TRUE)
+#forest(community.model2, addpred = TRUE, header = TRUE)
 
 #Checking the significance of my moderators and random effects to obtain a better fitting model
 #explanatories <- lmerTest::lmer(data = pairs_final, LRR ~ SoilType + (1|ID)) 
 #explanatories.1 <- lmerTest::lmer(data = pairs_final, LRR ~ SoilType + Crop.Type + (1|ID)) 
-explanatories.2 <- lmerTest::lmer(data = pairs_final, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
+#explanatories.2 <- lmerTest::lmer(data = pairs_final, LRR ~ SoilType + Crop.Type + Climate + (1|ID) + (1|Length.of.Experiment)) #maximum model
 #summary(explanatories)
 #summary(explanatories.1)
-summary(explanatorites.2)
-optimum_model <- get_model(step(explanatories.2))
-optimum_model_formula <- optimum_model$call
-optimum_model_formula
+#summary(explanatorites.2)
+#optimum_model <- get_model(step(explanatories.2))
+#optimum_model_formula <- optimum_model$call
+#optimum_model_formula
 
 #check if random is needed
-check <- lmerTest::lmer(data = pairs_final, LRR ~ 1 + (1|ID))
-summary(check)
+#check <- lmerTest::lmer(data = pairs_final, LRR ~ 1 + (1|ID) + (1|Length.of.Experiment))
+#summary(check)
 
-#Running optimum model as defined by step()
+#Running optimum model as defined by AIC values
 community.model3 <- rma.mv(yi=pairs_final$LRR,
                            V=pairs_final$LRR_var,
-                           mods = ~ SoilType,
+                           random=list(~ 1 | ID, ~1 | Length.of.Experiment),
+                           mods= ~ Climate,
                            slab=ID,
                            data=pairs_final)
 summary(community.model3)
@@ -221,15 +222,16 @@ forest(estimates, variances, slab="Pooled effect")
 #forest(prokaryotes.model2, addpred = TRUE, header = TRUE)
 
 #Checking the significance of my moderators and random effects to obtain a better fitting model
-explanatories.2 <- lmerTest::lmer(data = prokaryotes_subset, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
-optimum_model <- get_model(step(explanatories.2))
-optimum_model_formula <- optimum_model$call
-optimum_model_formula
+#explanatories.2 <- lmerTest::lmer(data = prokaryotes_subset, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
+#optimum_model <- get_model(step(explanatories.2))
+#optimum_model_formula <- optimum_model$call
+#optimum_model_formula
 
 #Running optimum model as defined by step()
 prokaryotes.model3 <- rma.mv(yi=prokaryotes_subset$LRR,
                              V=prokaryotes_subset$LRR_var,
-                             mods = ~ SoilType,
+                             random=list(~ 1 | ID, ~ 1 | Length.of.Experiment),
+                             mods = ~ Climate,
                              slab=ID,
                              data=prokaryotes_subset)
 summary(prokaryotes.model3)
@@ -275,14 +277,16 @@ forest(estimates, variances, slab="Pooled effect")
 #forest(eukaryotes.model2, addpred = TRUE, header = TRUE)
 
 #Checking the significance of my moderators and random effects to obtain a better fitting model
-explanatories.2 <- lmerTest::lmer(data = eukaryotes_subset, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
-optimum_model <- get_model(step(explanatories.2))
-optimum_model_formula <- optimum_model$call
-optimum_model_formula
+#explanatories.2 <- lmerTest::lmer(data = eukaryotes_subset, LRR ~ SoilType + Crop.Type + (1|ID) + (1|Length.of.Experiment)) #maximum model
+#optimum_model <- get_model(step(explanatories.2))
+#optimum_model_formula <- optimum_model$call
+#optimum_model_formula
 
 #Running optimum model as defined by step()
-prokaryotes.model3 <- rma.mv(yi=prokaryotes_subset$LRR,
-                             V=prokaryotes_subset$LRR_var,
+eukaryotes.model3 <- rma.mv(yi=eukaryotes_subset$LRR,
+                             V=eukaryotes_subset$LRR_var,
+                             random=list(~ 1 | ID, ~ 1 | Length.of.Experiment),
+                             mods= ~ Climate,
                              slab=ID,
-                             data=prokaryotes_subset)
-summary(prokaryotes.model3)
+                             data=eukaryotes_subset)
+summary(eukaryotes.model3)

@@ -32,12 +32,12 @@ calc.pairs <- function(data) {
 calc.effect <- function(siteone, sitetwo) {
   
   if (siteone$Management == "Conventional" && sitetwo$Management != "Conventional"){
-    n1i <- siteone$n1i
-    m1i <- siteone$Abundance
-    sd1i <- siteone$Variance
-    n2i <- sitetwo$n1i
-    m2i <- sitetwo$Abundance
-    sd2i <- sitetwo$Variance
+    n2i <- siteone$n1i
+    m2i <- siteone$Abundance
+    sd2i <- siteone$Variance
+    n1i <- sitetwo$n1i
+    m1i <- sitetwo$Abundance
+    sd1i <- sitetwo$Variance
     # print("Condition met.")
     
     #Calculating effect sizes with assigned variables
@@ -83,6 +83,9 @@ for (x in unique(data$ID)){
   pairs$LRR_var <- 0
   pairs$ID <- x
   pairs$SoilType[x] <- df$Soil.Type
+  pairs$Length.of.Experiment[x] <- df$Length.of.Experiment
+  pairs$Crop.Type[x] <- df$Crop
+  pairs$Climate[x] <- df$Climate
   #pairs$SoilDepth[x] <- df$Soil.Level
   
   for (i in 1:nrow(pairs)) {
@@ -138,16 +141,28 @@ variances <- c(vcov(community.model))
 forest(estimates, variances, slab="Pooled effect")
 
 #Running the model again with moderators
-community.model2 <- rma.mv(yi=pairs_final$LRR,
-                         V=pairs_final$LRR_var,
-                         random=list(~ 1 | ID),
-                         mods = ~ SoilType,
-                         slab=ID,
-                         data=pairs_final)
-summary(community.model2)
+#community.model2 <- rma.mv(yi=pairs_final$LRR,
+                         #V=pairs_final$LRR_var,
+                         #random=list(~ 1 | ID),
+                         #mods = ~ SoilType,
+                         #slab=ID,
+                         #data=pairs_final)
+#summary(community.model2)
 
 #Forest plot of model with moderators
-forest(community.model2, addpred = TRUE, header = TRUE)
+#forest(community.model2, addpred = TRUE, header = TRUE)
+
+#Running optimum model as defined by AIC values
+community.model3 <- rma.mv(yi=pairs_final$LRR,
+                           V=pairs_final$LRR_var,
+                           random=list(~ 1 | ID),
+                           mods= ~ SoilType,
+                           slab=ID,
+                           data=pairs_final)
+summary(community.model3)
+
+#Forest plot of optimum model
+forest(community.model3, addpred = TRUE, header = TRUE)
 
 
 #########################################################################################################################
@@ -249,9 +264,6 @@ bacteria.model <- rma.mv(yi=bacteria_subset$LRR,
                          slab=ID,
                          data=bacteria_subset)
 summary(bacteria.model)
-
-#To facilitate the interpretation, we transform the effect back to a normal correlation (z value to r value)
-convert_z2r(0.0102)
 
 #Making a forest plot of the bacteria model
 forest(bacteria.model)
